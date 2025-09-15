@@ -74,6 +74,7 @@ export default async function PostPage({
     [&_li]:mb-2
     [&_p]:mb-4 [&_p]:text-gray-700
     [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:my-4
+    [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800
   "
         dangerouslySetInnerHTML={{ __html: post.content.rendered || '' }}
       />
