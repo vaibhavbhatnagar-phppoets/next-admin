@@ -18,7 +18,7 @@ interface Props {
 async function getPost(slug: string): Promise<Post | null> {
   try {
     const res = await fetch(
-      `https://marvelwaterpark.in/wp-json/wp/v2/posts?slug=${slug}&_embed`,
+      `${process.env.SITE_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`,
       { next: { revalidate: 60 } }
     );
 
@@ -42,7 +42,7 @@ export default async function PostPage({
 }: {
   params: Promise<{ slug: string; product_detail: string }>;
 }) {
-  const { slug} = await params;
+  const { slug } = await params;
 
   const post = await getPost(slug);
 
@@ -54,7 +54,7 @@ export default async function PostPage({
 
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: '2rem' }} className='w-full max-w-7xl mx-auto px-4 *:'>
       <div className="">Author: {authorName}</div>
       {featured && (
         <Image
@@ -66,7 +66,6 @@ export default async function PostPage({
         />
       )}
       <h1>{post.title.rendered}</h1>
-
       <div
         className="
     [&_h1]:text-4xl [&_h1]:font-bold [&_h1]:mb-4
@@ -74,9 +73,11 @@ export default async function PostPage({
     [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4
     [&_li]:mb-2
     [&_p]:mb-4 [&_p]:text-gray-700
+    [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:my-4
   "
         dangerouslySetInnerHTML={{ __html: post.content.rendered || '' }}
       />
+
     </div>
   );
 }

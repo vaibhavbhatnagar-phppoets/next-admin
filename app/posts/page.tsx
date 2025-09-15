@@ -15,7 +15,7 @@ type Post = {
 
 async function getPosts(): Promise<Post[]> {
   const res = await fetch(
-    'https://marvelwaterpark.in/wp-json/wp/v2/posts?_embed',
+    `${process.env.SITE_URL}/wp-json/wp/v2/posts?_embed`,
     { next: { revalidate: 60 } } // ISR
   );
   if (!res.ok) return [];
