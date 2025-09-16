@@ -8,7 +8,9 @@ type Post = {
   content: { rendered: string };
   date?: string;
   _embedded?: {
-    [key: string]: any; // 👈 allows author, categories, etc.
+    author?: { id: number; name: string }[];
+    "wp:featuredmedia"?: { source_url: string }[];
+    "wp:term"?: { id: number; name: string; slug: string }[][];
   };
 };
 
