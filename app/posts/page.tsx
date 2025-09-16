@@ -1,30 +1,11 @@
 // app/posts/page.tsx
-import Link from 'next/link';
 import Image from 'next/image';
-// import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { getPosts } from '@/lib/posts';
 
-type Post = {
-  id: number;
-  title: { rendered: string };
-  slug: string;
-  excerpt?: { rendered: string };
-  content?: { rendered: string };
-  date?:string;
-  _embedded?: { 'wp:featuredmedia': { source_url: string }[] };
-};
+export default async function Page() {
 
-async function getPosts(): Promise<Post[]> {
-  const res = await fetch(
-    `${process.env.SITE_URL}/wp-json/wp/v2/posts?_embed`,
-    { next: { revalidate: 60 } } // ISR
-  );
-  if (!res.ok) return [];
-  return res.json();
-}
-
-export default async function PostsPage() {
   const posts = await getPosts();
-
 
   return (
     <div style={{ display: 'grid', gap: '2rem', padding: '2rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
@@ -42,13 +23,7 @@ export default async function PostsPage() {
               <a href="#">
                 {/* <img className="rounded-t-lg" src="/docs/images/blog/image-1.jpg" alt="" /> */}
                 {featured && (
-                  <Image
-                    src={featured}
-                    alt={post.title.rendered}
-                    width={600}
-                    height={400}
-                    style={{ width: '30%', height: 'auto' }}
-                  />
+                  <Image src={featured} alt={post.title.rendered} width={600} height={400} style={{ width: '30%', height: 'auto' }} />
                 )}
               </a>
               <div className="p-5">

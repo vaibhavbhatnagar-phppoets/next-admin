@@ -1,42 +1,6 @@
-// app/posts/[slug]/page.tsx
 import Image from 'next/image';
+import { getPost } from '@/lib/posts';
 
-type Post = {
-  id: number;
-  title: { rendered: string };
-  content: { rendered: string };
-  _embedded?: {
-    'wp:featuredmedia': { source_url: string }[]
-    author?: { name: string }[];
-  };
-};
-
-interface Props {
-  params: { slug: string };
-}
-
-async function getPost(slug: string): Promise<Post | null> {
-  try {
-    const res = await fetch(
-      `${process.env.SITE_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`,
-      { next: { revalidate: 60 } }
-    );
-
-    if (!res.ok) {
-      console.error('Fetch failed with status:', res.status);
-      return null;
-    }
-
-    const posts: Post[] = await res.json();
-    return posts[0] ?? null; // Return first post if exists
-  } catch (err) {
-    console.error('Fetch failed:', err);
-    return null;
-  }
-}
-
-// export default async function PostPage({ params }: Props) {
-//   const post = await getPost(params.slug);
 export default async function PostPage({
   params,
 }: {
@@ -51,19 +15,11 @@ export default async function PostPage({
   const featured = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   const authorName = post._embedded?.author?.[0]?.name || 'Unknown author';
 
-
-
   return (
     <div style={{ padding: '2rem' }} className='w-full max-w-7xl mx-auto px-4 *:'>
       <div className="">Author: {authorName}</div>
       {featured && (
-        <Image
-          src={featured}
-          alt={post.title.rendered}
-          width={800}
-          height={500}
-          style={{ width: '20%', height: 'auto' }}
-        />
+        <Image src={featured} alt={post.title.rendered} width={800} height={500} style={{ width: '20%', height: 'auto' }} />
       )}
       <h1>{post.title.rendered}</h1>
       <div
